@@ -1,118 +1,117 @@
 package me.lemon.winter.minecraft;
 
-import me.lemon.winter.memory.BooleanMemoryHandler;
-import me.lemon.winter.memory.FloatMemoryHandler;
-import me.lemon.winter.memory.IntMemoryHandler;
-import me.lemon.winter.memory.LongMemoryHandler;
-import me.lemon.winter.memory.Vec2MemoryHandler;
-import me.lemon.winter.memory.Vec3MemoryHandler;
+import me.lemon.winter.memory.*;
 
 public class Player {
-    private long address;
-    private Vec2MemoryHandler rotation;
-    private Vec2MemoryHandler prevRotation;
-    private BooleanMemoryHandler onGround;
-    private BooleanMemoryHandler prevOnGround;
-    private BooleanMemoryHandler collidedHorizontally;
-    private BooleanMemoryHandler collidedVertically;
-    private FloatMemoryHandler stepHeight;
-    private IntMemoryHandler ticksExisted;
-    private IntMemoryHandler hurtTime;
-    private LongMemoryHandler level;
-    private Vec3MemoryHandler aabbMin;
-    private Vec3MemoryHandler aabbMax;
-    private FloatMemoryHandler aabbWidth;
-    private FloatMemoryHandler aabbHeight;
-    private Vec3MemoryHandler eyePos;
-    private Vec3MemoryHandler prevEyePos;
-    private Vec3MemoryHandler motion;
+	private long address;
 
-    public Player(long address) {
-        this.address = address;
-        this.rotation = new Vec2MemoryHandler(address + 288L, true);
-        this.prevRotation = new Vec2MemoryHandler(address + 296L, true);
-        this.onGround = new BooleanMemoryHandler(address + 448L, true);
-        this.prevOnGround = new BooleanMemoryHandler(address + 449L, true);
-        this.collidedHorizontally = new BooleanMemoryHandler(address + 450L, true);
-        this.collidedVertically = new BooleanMemoryHandler(address + 451L, true);
-        this.stepHeight = new FloatMemoryHandler(address + 544L, true);
-        this.ticksExisted = new IntMemoryHandler(address + 660L, true);
-        this.hurtTime = new IntMemoryHandler(address + 664L, true);
-        this.level = new LongMemoryHandler(address + 856L, true);
-        this.aabbMin = new Vec3MemoryHandler(address + 1152L, true);
-        this.aabbMax = new Vec3MemoryHandler(address + 1164L, true);
-        this.aabbWidth = new FloatMemoryHandler(address + 1180L, true);
-        this.aabbHeight = new FloatMemoryHandler(address + 1184L, true);
-        this.eyePos = new Vec3MemoryHandler(address + 1188L, true);
-        this.prevEyePos = new Vec3MemoryHandler(address + 1200L, true);
-        this.motion = new Vec3MemoryHandler(address + 1212L, true);
-    }
+	private Vec2MemoryHandler rotation;
+	private Vec2MemoryHandler prevRotation;
+	private BooleanMemoryHandler onGround;
+	private BooleanMemoryHandler prevOnGround;
+	private BooleanMemoryHandler collidedHorizontally;
+	private BooleanMemoryHandler collidedVertically;
+	private FloatMemoryHandler stepHeight;
+	private IntMemoryHandler ticksExisted;
+	private IntMemoryHandler hurtTime;
+	private LongMemoryHandler level;
+	//TODO: dedicated aabb handler - this is super easy but i am super lazy :)
+	private Vec3MemoryHandler aabbMin;
+	private Vec3MemoryHandler aabbMax;
+	private FloatMemoryHandler aabbWidth;
+	private FloatMemoryHandler aabbHeight;
+	private Vec3MemoryHandler eyePos;
+	private Vec3MemoryHandler prevEyePos;
+	private Vec3MemoryHandler motion;
 
-    public Vec2MemoryHandler getRotation() {
-        return this.rotation;
-    }
+	public Player(long address) {
+		this.address = address;
 
-    public Vec2MemoryHandler getPrevRotation() {
-        return this.prevRotation;
-    }
+		rotation = new Vec2MemoryHandler(address + 0x120, true);
+		prevRotation = new Vec2MemoryHandler(address + 0x128, true);
+		onGround = new BooleanMemoryHandler(address + 0x1C0, true);
+		prevOnGround = new BooleanMemoryHandler(address + 0x1C1, true);
+		collidedHorizontally = new BooleanMemoryHandler(address + 0x1C2, true);
+		collidedVertically = new BooleanMemoryHandler(address + 0x1C3, true);
+		stepHeight = new FloatMemoryHandler(address + 0x220, true);
+		ticksExisted = new IntMemoryHandler(address + 0x294, true);
+		hurtTime = new IntMemoryHandler(address + 0x298, true);
+		level = new LongMemoryHandler(address + 0x358, true);
+		//TODO: dedicated aabb handler - this is super easy but i am super lazy :)
+		aabbMin = new Vec3MemoryHandler(address + 0x480, true);
+		aabbMax = new Vec3MemoryHandler(address + 0x48C, true);
+		aabbWidth = new FloatMemoryHandler(address + 0x49C, true);
+		aabbHeight = new FloatMemoryHandler(address + 0x4A0, true);
+		eyePos = new Vec3MemoryHandler(address + 0x4A4, true);
+		prevEyePos = new Vec3MemoryHandler(address + 0x4B0, true);
+		motion = new Vec3MemoryHandler(address + 0x4BC, true);
+	}
 
-    public BooleanMemoryHandler getOnGround() {
-        return this.onGround;
-    }
+	public Vec2MemoryHandler getRotation() {
+		return rotation;
+	}
 
-    public BooleanMemoryHandler getPrevOnGround() {
-        return this.prevOnGround;
-    }
+	public Vec2MemoryHandler getPrevRotation() {
+		return prevRotation;
+	}
 
-    public BooleanMemoryHandler getCollidedHorizontally() {
-        return this.collidedHorizontally;
-    }
+	public BooleanMemoryHandler getOnGround() {
+		return onGround;
+	}
 
-    public BooleanMemoryHandler getCollidedVertically() {
-        return this.collidedVertically;
-    }
+	public BooleanMemoryHandler getPrevOnGround() {
+		return prevOnGround;
+	}
 
-    public FloatMemoryHandler getStepHeight() {
-        return this.stepHeight;
-    }
+	public BooleanMemoryHandler getCollidedHorizontally() {
+		return collidedHorizontally;
+	}
 
-    public IntMemoryHandler getTicksExisted() {
-        return this.ticksExisted;
-    }
+	public BooleanMemoryHandler getCollidedVertically() {
+		return collidedVertically;
+	}
 
-    public IntMemoryHandler getHurtTime() {
-        return this.hurtTime;
-    }
+	public FloatMemoryHandler getStepHeight() {
+		return stepHeight;
+	}
 
-    public MultiPlayerLevel getLevel() {
-        return new MultiPlayerLevel(this.level.read());
-    }
+	public IntMemoryHandler getTicksExisted() {
+		return ticksExisted;
+	}
 
-    public Vec3MemoryHandler getAabbMin() {
-        return this.aabbMin;
-    }
+	public IntMemoryHandler getHurtTime() {
+		return hurtTime;
+	}
 
-    public Vec3MemoryHandler getAabbMax() {
-        return this.aabbMax;
-    }
+	public MultiPlayerLevel getLevel() {
+		return new MultiPlayerLevel(level.read());
+	}
 
-    public FloatMemoryHandler getAabbWidth() {
-        return this.aabbWidth;
-    }
+	public Vec3MemoryHandler getAabbMin() {
+		return aabbMin;
+	}
 
-    public FloatMemoryHandler getAabbHeight() {
-        return this.aabbHeight;
-    }
+	public Vec3MemoryHandler getAabbMax() {
+		return aabbMax;
+	}
 
-    public Vec3MemoryHandler getEyePos() {
-        return this.eyePos;
-    }
+	public FloatMemoryHandler getAabbWidth() {
+		return aabbWidth;
+	}
 
-    public Vec3MemoryHandler getPrevEyePos() {
-        return this.prevEyePos;
-    }
+	public FloatMemoryHandler getAabbHeight() {
+		return aabbHeight;
+	}
 
-    public Vec3MemoryHandler getMotion() {
-        return this.motion;
-    }
+	public Vec3MemoryHandler getEyePos() {
+		return eyePos;
+	}
+
+	public Vec3MemoryHandler getPrevEyePos() {
+		return prevEyePos;
+	}
+
+	public Vec3MemoryHandler getMotion() {
+		return motion;
+	}
 }

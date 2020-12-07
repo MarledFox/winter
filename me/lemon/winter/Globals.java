@@ -6,62 +6,43 @@ import com.github.jonatino.process.Processes;
 import me.lemon.winter.minecraft.MoveInputHandler;
 
 public class Globals {
-    private static Process minecraftProcess;
-    private static Module minecraftModule;
-    private static MoveInputHandler moveInputHandler;
+	private static Process minecraftProcess;
+	private static Module minecraftModule;
+	private static MoveInputHandler moveInputHandler;
 
-    public Globals() {
-    }
+	public static Process getMinecraft() {
+		if(minecraftProcess == null) {
+			Process foundProcess = null;
+			while(foundProcess == null) {
+				try {
+					foundProcess = Processes.byName("Minecraft.Windows.exe");
+				} catch(Exception e) { try { Thread.sleep(1000); } catch(Exception ex) {} }
+			}
+			minecraftProcess = foundProcess;
+		}
+		return minecraftProcess;
+	}
 
-    public static Process getMinecraft() {
-        if (minecraftProcess == null) {
-            Process foundProcess = null;
+	public static Module getMinecraftModule() {
+		if(minecraftModule == null) {
+			minecraftModule = getMinecraft().findModule("Minecraft.Windows.exe");
+		}
+		return minecraftModule;
+	}
 
-            while(foundProcess == null) {
-                try {
-                    foundProcess = Processes.byName("Minecraft.Windows.exe");
-                } catch (Exception var4) {
-                    try {
-                        Thread.sleep(1000L);
-                    } catch (Exception var3) {
-                    }
-                }
-            }
-
-            minecraftProcess = foundProcess;
-        }
-
-        return minecraftProcess;
-    }
-
-    public static Module getMinecraftModule() {
-        if (minecraftModule == null) {
-            minecraftModule = getMinecraft().findModule("Minecraft.Windows.exe");
-        }
-
-        return minecraftModule;
-    }
-
-    public static MoveInputHandler getMoveInputHandler() {
-        if (moveInputHandler == null) {
-            try {
-                long clientInstance = getMinecraftModule().readLong(57672904L);
-                long[] clientInstancePtrs = new long[]{3168L, 24L, 24L, 8L};
-                long[] var3 = clientInstancePtrs;
-                int var4 = clientInstancePtrs.length;
-
-                for(int var5 = 0; var5 < var4; ++var5) {
-                    long ptr = var3[var5];
-                    clientInstance = getMinecraft().readLong(clientInstance + ptr);
-                    System.out.println(Long.toHexString(ptr));
-                }
-
-                long moveInputHandlerAddress = getMinecraft().readLong(clientInstance + 120L);
-                moveInputHandler = new MoveInputHandler(moveInputHandlerAddress);
-            } catch (Exception var8) {
-            }
-        }
-
-        return moveInputHandler;
-    }
+	public static MoveInputHandler getMoveInputHandler() {
+		if(moveInputHandler == null) {
+			try {
+				long clientInstance = Globals.getMinecraftModule().readLong(0x37004C8L);
+				long clientInstancePtrs[] = { 0xC60, 0x18, 0x18, 0x8 };
+				for(long ptr : clientInstancePtrs) {
+					clientInstance = Globals.getMinecraft().readLong(clientInstance + ptr);
+					System.out.println(Long.toHexString(ptr));
+				}
+				long moveInputHandlerAddress = Globals.getMinecraft().readLong(clientInstance + 0x78);
+				moveInputHandler = new MoveInputHandler(moveInputHandlerAddress);
+			} catch (Exception e) { }
+		}
+		return moveInputHandler;
+	}
 }

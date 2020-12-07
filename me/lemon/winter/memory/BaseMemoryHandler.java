@@ -1,32 +1,30 @@
 package me.lemon.winter.memory;
 
 public class BaseMemoryHandler<T> {
-    protected long address;
-    protected T storedValue;
-    protected boolean needsRead;
-    protected boolean stores;
+	protected long address;
+	protected T storedValue;
+	protected boolean needsRead;
+	protected boolean stores;
 
-    public BaseMemoryHandler(long address, boolean stores) {
-        this.address = address;
-        this.stores = stores;
-        this.needsRead = true;
-        this.storedValue = null;
-    }
+	public BaseMemoryHandler(long address, boolean stores) {
+		this.address = address;
+		this.stores = stores;
 
-    public boolean write(Object value) {
-        if (this.storedValue != null && !value.getClass().equals(this.storedValue.getClass())) {
-            return false;
-        } else {
-            this.needsRead = true;
-            return true;
-        }
-    }
+		this.needsRead = true;
+		storedValue = null;
+	}
 
-    public T read() {
-        if (!this.stores) {
-            this.needsRead = true;
-        }
+	public boolean write(Object value) {
+		if(storedValue != null && !value.getClass().equals(storedValue.getClass()))
+			return false;
+		needsRead = true;
+		return true;
+	}
 
-        return this.storedValue;
-    }
+	public T read() {
+		if(!stores) {
+			this.needsRead = true;
+		}
+		return this.storedValue;
+	}
 }

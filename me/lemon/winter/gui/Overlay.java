@@ -4,139 +4,128 @@ import com.sun.awt.AWTUtilities;
 import com.sun.jna.Native;
 import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.win32.User32;
-import com.sun.jna.platform.win32.WinDef.HWND;
-import com.sun.jna.platform.win32.WinDef.RECT;
-import com.sun.jna.platform.win32.WinUser.WINDOWINFO;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Window;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.swing.JComponent;
+import com.sun.jna.platform.win32.WinDef;
+import com.sun.jna.platform.win32.WinUser;
 import me.lemon.winter.Winter;
 import me.lemon.winter.feature.Feature;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Overlay {
-    private Window overlayWindow = new Window((Frame)null);
+	private Window overlayWindow;
+	public Overlay() {
+		overlayWindow = new Window(null);
+		overlayWindow.add(new JComponent() {
+			protected void paintComponent(Graphics graphics) {
+				drawOverlay(graphics);
+			}
+			public Dimension getPreferredSize() {
+				return new Dimension(5000, 5000);
+			}
+		});
 
-    public Overlay() {
-        this.overlayWindow.add(new JComponent() {
-            protected void paintComponent(Graphics graphics) {
-                Overlay.this.drawOverlay(graphics);
-            }
+		overlayWindow.setSize(1, 1);
+		overlayWindow.setLocationRelativeTo(null);
+		overlayWindow.setVisible(true);
+		overlayWindow.setAlwaysOnTop(true);
 
-            public Dimension getPreferredSize() {
-                return new Dimension(5000, 5000);
-            }
-        });
-        this.overlayWindow.setSize(1, 1);
-        this.overlayWindow.setLocationRelativeTo((Component)null);
-        this.overlayWindow.setVisible(true);
-        this.overlayWindow.setAlwaysOnTop(true);
-        AWTUtilities.setWindowOpaque(this.overlayWindow, false);
-        this.setTransparent(this.overlayWindow);
-        HWND minecraftHwnd = User32.INSTANCE.FindWindow((String)null, "Minecraft");
-        (new Thread(() -> {
-            while(true) {
-                this.repaint();
+		AWTUtilities.setWindowOpaque(overlayWindow, false);
+		setTransparent(overlayWindow);
 
-                try {
-                    WINDOWINFO info = new WINDOWINFO();
-                    User32.INSTANCE.GetWindowInfo(minecraftHwnd, info);
-                    if ((info.dwStyle & 536870912) == 536870912) {
-                        this.overlayWindow.setLocation(-20000, -20000);
-                    } else {
-                        Rectangle rect = WindowUtils.getWindowLocationAndSize(minecraftHwnd);
-                        this.overlayWindow.setLocation(rect.x, rect.y);
-                        this.overlayWindow.setSize(rect.width, rect.height);
-                    }
-                } catch (Exception var5) {
-                    System.exit(0);
-                }
+		WinDef.HWND minecraftHwnd = User32.INSTANCE.FindWindow(null, "Minecraft");
 
-                try {
-                    Thread.sleep(16L);
-                } catch (Exception var4) {
-                    var4.printStackTrace();
-                }
-            }
-        })).start();
-    }
+		new Thread(() -> {
+			while(true) {
+				repaint();
+				try {
+					WinUser.WINDOWINFO info = new WinUser.WINDOWINFO();
+					User32.INSTANCE.GetWindowInfo(minecraftHwnd, info);
+					if ((info.dwStyle & 0x20000000) == 0x20000000) {
+						overlayWindow.setLocation(-20000, -20000);
+					} else {
+						Rectangle rect = WindowUtils.getWindowLocationAndSize(minecraftHwnd);
+						overlayWindow.setLocation(rect.x, rect.y);
+						overlayWindow.setSize(rect.width, rect.height);
+					}
+				} catch (Exception e) {
+					System.exit(0);
+				}
+				try {
+					Thread.sleep(16);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
 
-    public void drawOverlay(Graphics graphics) {
-        if (Winter.getInstance().isInCraft()) {
-            Graphics2D graphics2D = (Graphics2D)graphics;
-            graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            graphics.setFont(new Font("Verdana", 1, 35));
-            this.drawShadowString(graphics, "Winter", 12, 68, Color.WHITE);
-            graphics.setFont(new Font("Verdana", 1, 17));
-            this.drawShadowString(graphics, "Bedrock 1.16.100", 147, 54, Color.LIGHT_GRAY);
-            List<Feature> enabledList = (List)Winter.getInstance().getFeatureManager().values().stream().filter(Feature::isEnabled).collect(Collectors.toList());
-            Collections.sort(enabledList, (f1, f2) -> {
-                String f1Name = f1.getName() + (f1.getSuffix().isEmpty() ? "" : "" + f1.getSuffix());
-                String f2Name = f2.getName() + (f2.getSuffix().isEmpty() ? "" : "" + f2.getSuffix());
-                int f1Width = graphics.getFontMetrics().stringWidth(f1Name);
-                int f2Width = graphics.getFontMetrics().stringWidth(f2Name);
-                return -Integer.compare(f1Width, f2Width);
-            });
-            int y = 88;
-            Iterator var5 = enabledList.iterator();
+	public void drawOverlay(Graphics graphics) {
+		if(!Winter.getInstance().isInCraft())
+			return;
 
-            while(var5.hasNext()) {
-                Feature feature = (Feature)var5.next();
-                if (feature.isEnabled()) {
-                    if (!feature.getSuffix().isEmpty()) {
-                        this.drawShadowString(graphics, feature.getName() + " " + feature.getSuffix(), 12, y, Color.LIGHT_GRAY);
-                    }
+		Graphics2D graphics2D = (Graphics2D)graphics;
+		graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		graphics.setFont(new Font("Verdana", Font.BOLD, 35));
+		drawShadowString(graphics, "Winter", 12, 68, Color.WHITE);
+		graphics.setFont(new Font("Verdana", Font.BOLD, 17));
+		drawShadowString(graphics, "Bedrock 1.16.100", 147, 54, Color.LIGHT_GRAY);
+		List<Feature> enabledList = Winter.getInstance().getFeatureManager().values().stream().filter(Feature::isEnabled).collect(Collectors.toList());
+		Collections.sort(enabledList, (f1, f2) -> {
+			String f1Name = f1.getName() + (f1.getSuffix().isEmpty() ? "" : "" +  f1.getSuffix());
+			String f2Name = f2.getName() + (f2.getSuffix().isEmpty() ? "" : "" +  f2.getSuffix());
+			int f1Width = graphics.getFontMetrics().stringWidth(f1Name);
+			int f2Width = graphics.getFontMetrics().stringWidth(f2Name);
+			return -Integer.compare(f1Width, f2Width);
+		});
 
-                    this.drawShadowString(graphics, feature.getName(), 12, y, feature.getColor());
-                    y += 20;
-                }
-            }
+		int y = 88;
+		for(Feature feature : enabledList) {
+			if(!feature.isEnabled())
+				continue;
 
-        }
-    }
+			if(!feature.getSuffix().isEmpty()) {
+				drawShadowString(graphics, feature.getName() + " " + feature.getSuffix(), 12, y, Color.LIGHT_GRAY);
+			}
 
-    public void drawShadowString(Graphics graphics, String string, int x, int y, Color color) {
-        graphics.setColor(color.darker().darker().darker());
-        graphics.drawString(string, x + 2, y + 2);
-        graphics.setColor(color);
-        graphics.drawString(string, x, y);
-    }
+			drawShadowString(graphics, feature.getName(), 12, y, feature.getColor());
+			y += 20;
+		}
+	}
 
-    public void repaint() {
-        this.overlayWindow.getComponents()[0].repaint();
-    }
+	public void drawShadowString(Graphics graphics, String string, int x, int y, Color color) {
+		graphics.setColor(color.darker().darker().darker());
+		graphics.drawString(string, x + 2, y + 2);
+		graphics.setColor(color);
+		graphics.drawString(string, x, y);
+	}
 
-    private HWND getHWnd(Component w) {
-        HWND hwnd = new HWND();
-        hwnd.setPointer(Native.getComponentPointer(w));
-        return hwnd;
-    }
+	public void repaint() {
+		overlayWindow.getComponents()[0].repaint();
+	}
 
-    private void setTransparent(Component w) {
-        HWND hwnd = this.getHWnd(w);
-        int wl = User32.INSTANCE.GetWindowLong(hwnd, -20);
-        wl = wl | 524288 | 32;
-        User32.INSTANCE.SetWindowLong(hwnd, -20, wl);
-    }
+	private WinDef.HWND getHWnd(Component w) {
+		WinDef.HWND hwnd = new WinDef.HWND();
+		hwnd.setPointer(Native.getComponentPointer(w));
+		return hwnd;
+	}
 
-    private Rectangle getRect(HWND hwnd) throws Exception {
-        RECT rect = new RECT();
-        boolean result = User32.INSTANCE.GetWindowRect(hwnd, rect);
-        if (!result) {
-            throw new Exception();
-        } else {
-            return rect.toRectangle();
-        }
-    }
+	private void setTransparent(Component w) {
+		WinDef.HWND hwnd = getHWnd(w);
+		int wl = User32.INSTANCE.GetWindowLong(hwnd, WinUser.GWL_EXSTYLE);
+		wl = wl | WinUser.WS_EX_LAYERED | WinUser.WS_EX_TRANSPARENT;
+		User32.INSTANCE.SetWindowLong(hwnd, WinUser.GWL_EXSTYLE, wl);
+	}
+
+	private Rectangle getRect(WinDef.HWND hwnd) throws Exception {
+		WinDef.RECT rect = new WinDef.RECT();
+		boolean result = User32.INSTANCE.GetWindowRect(hwnd, rect);
+		if (!result) {
+			throw new Exception();
+		}
+		return rect.toRectangle();
+	}
 }

@@ -4,61 +4,54 @@ import me.lemon.winter.memory.BooleanMemoryHandler;
 import me.lemon.winter.memory.FloatMemoryHandler;
 
 public class MoveInputHandler {
-    private FloatMemoryHandler moveStrafe;
-    private FloatMemoryHandler moveForward;
-    private BooleanMemoryHandler sneak;
-    private BooleanMemoryHandler jump;
-    private BooleanMemoryHandler sprint;
-    private BooleanMemoryHandler forward;
-    private BooleanMemoryHandler back;
-    private BooleanMemoryHandler left;
-    private BooleanMemoryHandler right;
+	private FloatMemoryHandler moveStrafe, moveForward;
+	private BooleanMemoryHandler sneak, jump, sprint, forward, back, left, right;
 
-    public MoveInputHandler(long address) {
-        this.moveStrafe = new FloatMemoryHandler(address + 8L, false);
-        this.moveForward = new FloatMemoryHandler(address + 12L, false);
-        this.sneak = new BooleanMemoryHandler(address + 73L, false);
-        this.jump = new BooleanMemoryHandler(address + 91L, false);
-        this.sprint = new BooleanMemoryHandler(address + 92L, false);
-        this.forward = new BooleanMemoryHandler(address + 95L, false);
-        this.back = new BooleanMemoryHandler(address + 96L, false);
-        this.left = new BooleanMemoryHandler(address + 97L, false);
-        this.right = new BooleanMemoryHandler(address + 98L, false);
-    }
+	public MoveInputHandler(long address) {
+		moveStrafe = new FloatMemoryHandler(address + 0x8, false);
+		moveForward = new FloatMemoryHandler(address + 0xC, false);
+		sneak = new BooleanMemoryHandler(address + 0x49, false);
+		jump = new BooleanMemoryHandler(address + 0x5B, false);
+		sprint = new BooleanMemoryHandler(address + 0x5C, false);
+		forward = new BooleanMemoryHandler(address + 0x5F, false);
+		back = new BooleanMemoryHandler(address + 0x60, false);
+		left = new BooleanMemoryHandler(address + 0x61, false);
+		right = new BooleanMemoryHandler(address + 0x62, false);
+	}
 
-    public FloatMemoryHandler getMoveStrafe() {
-        return this.moveStrafe;
-    }
+	public FloatMemoryHandler getMoveStrafe() {
+		return moveStrafe;
+	}
 
-    public FloatMemoryHandler getMoveForward() {
-        return this.moveForward;
-    }
+	public FloatMemoryHandler getMoveForward() {
+		return moveForward;
+	}
 
-    public BooleanMemoryHandler getSneak() {
-        return this.sneak;
-    }
+	public BooleanMemoryHandler getSneak() {
+		return sneak;
+	}
 
-    public BooleanMemoryHandler getJump() {
-        return this.jump;
-    }
+	public BooleanMemoryHandler getJump() {
+		return jump;
+	}
 
-    public BooleanMemoryHandler getSprint() {
-        return this.sprint;
-    }
+	public BooleanMemoryHandler getSprint() {
+		return sprint;
+	}
 
-    public BooleanMemoryHandler getForward() {
-        return this.forward;
-    }
+	public BooleanMemoryHandler getForward() {
+		return forward;
+	}
 
-    public BooleanMemoryHandler getBack() {
-        return this.back;
-    }
+	public BooleanMemoryHandler getBack() {
+		return back;
+	}
 
-    public BooleanMemoryHandler getLeft() {
-        return this.left;
-    }
+	public BooleanMemoryHandler getLeft() {
+		return left;
+	}
 
-    public BooleanMemoryHandler getRight() {
-        return this.right;
-    }
+	public BooleanMemoryHandler getRight() {
+		return right;
+	}
 }
