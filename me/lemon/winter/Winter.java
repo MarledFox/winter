@@ -143,7 +143,7 @@ public class Winter {
                         }
                     }
                 } catch (Exception var14) {
-                    //var14.printStackTrace();
+                    var14.printStackTrace();
                 }
             }
         }
