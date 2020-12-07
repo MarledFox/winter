@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="fastutil-8.2.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Videos/kdenlive-renderqueue/libs/fastutil-8.2.1.jar!/" />
+      <root url="jar://$USER_HOME$/Videos/kdenlive-renderqueue/libs/Java-Memory-Manipulation-2.1.2.jar!/" />
+      <root url="jar://$USER_HOME$/Videos/kdenlive-renderqueue/libs/jna-4.5.2.jar!/" />
+      <root url="jar://$USER_HOME$/Videos/kdenlive-renderqueue/libs/jna-platform-4.5.2.jar!/" />
+      <root url="jar://$USER_HOME$/Videos/kdenlive-renderqueue/libs/system-hook-3.8.jar!/" />
+      <root url="jar://$USER_HOME$/Videos/kdenlive-renderqueue/libs/zero-allocation-hashing-0.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
