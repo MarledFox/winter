@@ -70,9 +70,9 @@ public class Overlay {
 		Graphics2D graphics2D = (Graphics2D)graphics;
 		graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		graphics.setFont(new Font("Verdana", Font.BOLD, 35));
-		drawShadowString(graphics, "Winter", 12, 68, Color.WHITE);
+		drawShadowString(graphics, "Winter", 12, 68, Color.GREY);
 		graphics.setFont(new Font("Verdana", Font.BOLD, 17));
-		drawShadowString(graphics, "Bedrock 1.16.100", 147, 54, Color.LIGHT_GRAY);
+		drawShadowString(graphics, "Bedrock 1.16.100", 147, 54, Color.LIGHT_BLUE);
 		List<Feature> enabledList = Winter.getInstance().getFeatureManager().values().stream().filter(Feature::isEnabled).collect(Collectors.toList());
 		Collections.sort(enabledList, (f1, f2) -> {
 			String f1Name = f1.getName() + (f1.getSuffix().isEmpty() ? "" : "" +  f1.getSuffix());
